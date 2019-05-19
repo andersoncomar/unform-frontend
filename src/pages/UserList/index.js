@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
-import { Container, TableContainer } from './styles';
+import {
+  Container, TableContainer, ButtonEdit, ButtonRemove, ButtonCreate,
+} from './styles';
 
 export default class UserList extends Component {
   state = {
@@ -16,18 +17,17 @@ export default class UserList extends Component {
   }
 
   async handleDestroy(id) {
-    const response = await api.delete(`/users/${id}`);
+    const { history } = this.props;
+    await api.delete(`/users/${id}`);
 
-    console.log(response);
-
-    this.props.history.push('/users');
+    history.push('/users');
   }
 
   render() {
     const { users } = this.state;
     return (
       <Container>
-        <Link to="/users/create">Criar usuário</Link>
+        <ButtonCreate to="/users/create">Criar usuário</ButtonCreate>
         <TableContainer>
           <thead>
             <tr>
@@ -41,12 +41,12 @@ export default class UserList extends Component {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <Link to={`/users/edit/${user._id}`}>Editar</Link>
+                  <ButtonEdit to={`/users/edit/${user._id}`}>Editar</ButtonEdit>
                 </td>
                 <td>
-                  <button type="button" onClick={() => this.handleDestroy(user._id)}>
+                  <ButtonRemove type="button" onClick={() => this.handleDestroy(user._id)}>
                     Remover
-                  </button>
+                  </ButtonRemove>
                 </td>
               </tr>
             ))}
